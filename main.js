@@ -17,3 +17,25 @@ console.log('🚀 ~ file: main.js:16 ~ renderer:', renderer);
 
 renderer.setSize(innerHeight, innerHeight);
 document.body.appendChild(renderer.domElement);
+
+const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+console.log('🚀 ~ file: main.js:22 ~ boxGeometry:', boxGeometry);
+
+const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+console.log('🚀 ~ file: main.js:25 ~ material:', material);
+
+const mesh = new THREE.Mesh(boxGeometry, material);
+console.log('🚀 ~ file: main.js:28 ~ mesh:', mesh);
+
+scene.add(mesh);
+
+camera.position.z = 5;
+
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+  mesh.rotation.x += 0.01;
+  mesh.rotation.y += 0.01;
+}
+
+animate();

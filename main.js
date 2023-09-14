@@ -16,6 +16,7 @@ const renderer = new THREE.WebGLRenderer();
 console.log('🚀 ~ file: main.js:16 ~ renderer:', renderer);
 
 renderer.setSize(innerHeight, innerHeight);
+renderer.setPixelRatio(devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);

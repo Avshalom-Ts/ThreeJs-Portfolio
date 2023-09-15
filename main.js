@@ -35,7 +35,10 @@ camera.position.z = 5;
 const planeGeometry = new THREE.PlaneGeometry(5, 5, 10, 10);
 // console.log('🚀 ~ file: main.js:36 ~ planeGeometry:', planeGeometry);
 
-const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const planeMaterial = new THREE.MeshBasicMaterial({
+  color: 0xff0000,
+  side: THREE.DoubleSide,
+});
 
 const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
 
@@ -46,6 +49,9 @@ function animate() {
   renderer.render(scene, camera);
   mesh.rotation.x += 0.01;
   mesh.rotation.y += 0.01;
+
+  planeMesh.rotation.x += 0.01;
+  // planeMesh.rotation.y += 0.01;
 }
 
 animate();

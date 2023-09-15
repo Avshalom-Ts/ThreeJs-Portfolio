@@ -24,21 +24,38 @@ camera.position.z = 5;
 const planeGeometry = new THREE.PlaneGeometry(5, 5, 10, 10);
 // console.log('🚀 ~ file: main.js:36 ~ planeGeometry:', planeGeometry);
 
-const planeMaterial = new THREE.MeshBasicMaterial({
+const planeMaterial = new THREE.MeshPhongMaterial({
   color: 0xff0000,
   side: THREE.DoubleSide,
+  flatShading: THREE.FlatShading,
 });
+console.log('🚀 ~ file: main.js:31 ~ planeMaterial:', planeMaterial);
 
 const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+console.log(
+  '🚀 ~ file: main.js:34 ~ planeMesh:',
+  planeMesh.geometry.attributes.position.array
+);
+const { array } = planeMesh.geometry.attributes.position;
+for (let i = 0; i < array.length; i += 3) {
+  const x = array[i];
+  const y = array[i + 1];
+  const z = array[i + 2];
+
+  array[i + 2] = z + Math.random();
+}
 
 scene.add(planeMesh);
+
+const light = new THREE.DirectionalLight(0xffffff, 1);
+console.log('🚀 ~ file: main.js:38 ~ light:', light);
+
+light.position.set(0, 0, 5);
+scene.add(light);
 
 function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
-
-  planeMesh.rotation.x += 0.01;
-  // planeMesh.rotation.y += 0.01;
 }
 
 animate();

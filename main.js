@@ -38,6 +38,9 @@ function generatePlane() {
   }
 }
 
+const raycaster = new THREE.Raycaster();
+// console.log('🚀 ~ file: main.js:42 ~ raycaster:', raycaster);
+
 const scene = new THREE.Scene();
 // console.log('🚀 ~ file: main.js:4 ~ scene:', scene);
 
@@ -67,9 +70,10 @@ const planeGeometry = new THREE.PlaneGeometry(5, 5, 10, 10);
 // console.log('🚀 ~ file: main.js:36 ~ planeGeometry:', planeGeometry);
 
 const planeMaterial = new THREE.MeshPhongMaterial({
-  color: 0xff0000,
+  // color: 0xff0000,
   side: THREE.DoubleSide,
   flatShading: THREE.FlatShading,
+  vertexColors: true,
 });
 // console.log('🚀 ~ file: main.js:31 ~ planeMaterial:', planeMaterial);
 
@@ -78,6 +82,7 @@ const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
 //   '🚀 ~ file: main.js:34 ~ planeMesh:',
 //   planeMesh.geometry.attributes.position.array
 // );
+
 const { array } = planeMesh.geometry.attributes.position;
 for (let i = 0; i < array.length; i += 3) {
   const x = array[i];
@@ -86,6 +91,20 @@ for (let i = 0; i < array.length; i += 3) {
 
   array[i + 2] = z + Math.random();
 }
+
+const colors = [];
+
+for (let i = 0; i < planeMesh.geometry.attributes.position.count; i++) {
+  colors.push(1, 0, 0);
+}
+console.log(colors);
+
+planeMesh.geometry.setAttribute(
+  'color',
+  new THREE.BufferAttribute(new Float32Array(colors), 3)
+);
+
+console.log(planeMesh.geometry.attributes);
 
 scene.add(planeMesh);
 
@@ -100,10 +119,34 @@ const backLight = new THREE.DirectionalLight(0xffffff, 1);
 backLight.position.set(0, 0, -1);
 scene.add(backLight);
 
+const mouse = {
+  x: undefined,
+  y: undefined,
+};
+
 function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
-  controls.update();
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObject(planeMesh);
+
+  if (intersects.length > 0) {
+    // console.log('intersecting');
+    // console.log(intersects[0].face);
+    const { color } = intersects[0].object.geometry.attributes;
+
+    color.setX(intersects[0].face.a, 0);
+    color.setX(intersects[0].face.b, 0);
+    color.setX(intersects[0].face.c, 0);
+    intersects[0].object.geometry.attributes.color.needsUpdate = true;
+  }
 }
 
 animate();
+
+addEventListener('mousemove', event => {
+  mouse.x = (event.clientX / innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / innerHeight) * 2 + 1;
+  // console.log('🚀 ~ file: main.js:117 ~ mouse:', mouse);
+});

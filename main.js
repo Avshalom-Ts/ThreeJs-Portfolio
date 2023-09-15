@@ -1,5 +1,52 @@
 import './style.css';
 import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
+import * as dat from 'dat.gui';
+// console.log('🚀 ~ file: main.js:4 ~ dat:', dat);
+
+const gui = new dat.GUI();
+// console.log('🚀 ~ file: main.js:6 ~ gui:', gui);
+const world = {
+  plane: {
+    width: 10,
+    height: 10,
+  },
+};
+gui.add(world.plane, 'width', 1, 20, 1).onChange(() => {
+  // console.log(world.plane.width);
+  // console.log(planeMesh.geometry);
+  planeMesh.geometry.dispose();
+  planeMesh.geometry = new THREE.PlaneGeometry(
+    world.plane.width,
+    world.plane.height,
+    10,
+    10
+  );
+  const { array } = planeMesh.geometry.attributes.position;
+  for (let i = 0; i < array.length; i += 3) {
+    const x = array[i];
+    const y = array[i + 1];
+    const z = array[i + 2];
+
+    array[i + 2] = z + Math.random();
+  }
+});
+gui.add(world.plane, 'height', 1, 20, 1).onChange(() => {
+  planeMesh.geometry.dispose();
+  planeMesh.geometry = new THREE.PlaneGeometry(
+    world.plane.width,
+    world.plane.height,
+    10,
+    10
+  );
+  const { array } = planeMesh.geometry.attributes.position;
+  for (let i = 0; i < array.length; i += 3) {
+    const x = array[i];
+    const y = array[i + 1];
+    const z = array[i + 2];
+
+    array[i + 2] = z + Math.random();
+  }
+});
 
 const scene = new THREE.Scene();
 // console.log('🚀 ~ file: main.js:4 ~ scene:', scene);
@@ -29,13 +76,13 @@ const planeMaterial = new THREE.MeshPhongMaterial({
   side: THREE.DoubleSide,
   flatShading: THREE.FlatShading,
 });
-console.log('🚀 ~ file: main.js:31 ~ planeMaterial:', planeMaterial);
+// console.log('🚀 ~ file: main.js:31 ~ planeMaterial:', planeMaterial);
 
 const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-console.log(
-  '🚀 ~ file: main.js:34 ~ planeMesh:',
-  planeMesh.geometry.attributes.position.array
-);
+// console.log(
+//   '🚀 ~ file: main.js:34 ~ planeMesh:',
+//   planeMesh.geometry.attributes.position.array
+// );
 const { array } = planeMesh.geometry.attributes.position;
 for (let i = 0; i < array.length; i += 3) {
   const x = array[i];
@@ -48,7 +95,7 @@ for (let i = 0; i < array.length; i += 3) {
 scene.add(planeMesh);
 
 const light = new THREE.DirectionalLight(0xffffff, 1);
-console.log('🚀 ~ file: main.js:38 ~ light:', light);
+// console.log('🚀 ~ file: main.js:38 ~ light:', light);
 
 light.position.set(0, 0, 5);
 scene.add(light);

@@ -1,5 +1,6 @@
 import './style.css';
 import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
+import { OrbitControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
 // console.log('🚀 ~ file: main.js:4 ~ dat:', dat);
 
@@ -51,11 +52,16 @@ const camera = new THREE.PerspectiveCamera(
 const renderer = new THREE.WebGLRenderer();
 // console.log('🚀 ~ file: main.js:16 ~ renderer:', renderer);
 
+const controls = new OrbitControls(camera, renderer.domElement);
+
+camera.position.set(0, 0, 5);
+controls.update();
+
 renderer.setSize(innerHeight, innerHeight);
 renderer.setPixelRatio(devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
-camera.position.z = 5;
+// camera.position.z = 5;
 
 const planeGeometry = new THREE.PlaneGeometry(5, 5, 10, 10);
 // console.log('🚀 ~ file: main.js:36 ~ planeGeometry:', planeGeometry);
@@ -83,15 +89,21 @@ for (let i = 0; i < array.length; i += 3) {
 
 scene.add(planeMesh);
 
+// Light
 const light = new THREE.DirectionalLight(0xffffff, 1);
 // console.log('🚀 ~ file: main.js:38 ~ light:', light);
-
-light.position.set(0, 0, 5);
+light.position.set(0, 0, 1);
 scene.add(light);
+
+// BackLight
+const backLight = new THREE.DirectionalLight(0xffffff, 1);
+backLight.position.set(0, 0, -1);
+scene.add(backLight);
 
 function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
+  controls.update();
 }
 
 animate();
